@@ -24,7 +24,7 @@ pipeline {
         DELAY = "${params.delay}"
         PUBLIC_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-pub-key'
         PRIVATE_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-priv-key'
-        ENVIRONMENT = "${TARGET_ENVIRONMENTS[params.environment]}"
+        ENVIRONMENT_TEST = "${TARGET_ENVIRONMENTS[params.environment]}"
     }
 
     stages {
@@ -55,7 +55,7 @@ pipeline {
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
                     script {
                         def delay = "${params.delay}"
-                        def environment_id = "${ENVIRONMENT}"
+                        def environment_id = "${ENVIRONMENT_TEST}"
                         sh '''
                             PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                             PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
