@@ -55,9 +55,9 @@ pipeline {
                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
                     script {
-                        sh "echo ${ENVIRONMENT}"
                         sh "echo ${DELAY}"
                         def script_env = "${ENVIRONMENT}"
+                        sh "echo ${script_env}"
                         sh '''
                             echo $script_env
                             PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
