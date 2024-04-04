@@ -55,7 +55,7 @@ pipeline {
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
                     script {
                         def delay = "${params.delay}"
-                        def environment_id = "${TARGET_ENVIRONMENTS[params.environment]}"
+                        def environment_id = "${ENVIRONMENT}"
                         sh '''
                             PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                             PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
