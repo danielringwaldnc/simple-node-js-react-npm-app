@@ -50,7 +50,7 @@ pipeline {
 
         stage('Run newman') { 
             steps {
-                withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
+                /*withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
                     script {
@@ -64,6 +64,32 @@ pipeline {
                         '''
                         } }
                     }
+                }
+                */
+
+                // Retrieve JWT key from Jenkins credentials
+                withCredentials([string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
+                                string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY')]) {
+                    // Prepare the payload for updating the Postman environment
+                    def payload = """
+                    {
+                        "environment": {
+                            "values": [
+                                {
+                                    "key": "jwtKey",
+                                    "value": "${JWT_KEY}",
+                                    "enabled": true
+                                }
+                            ]
+                        }
+                    }
+                    """
+
+                    // Use curl to call Postman API and update the environment variable
+                    sh "curl --location --request PUT 'https://api.getpostman.com/environments/${ENVIRONMENT_TEST}' \\
+                    --header 'X-Api-Key: ${POSTMAN_API_KEY}' \\
+                    --header 'Content-Type: application/json' \\
+                    --data-raw '${payload}'"
                 }
             }
         }
