@@ -1,6 +1,13 @@
 pipeline {
     agent any
     stages {
+
+        stage('Install newman') { 
+            steps {
+                sh 'npm install -g newman'
+            }
+        }
+
         stage('Run newman') { 
             steps {
                 withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY')]){
