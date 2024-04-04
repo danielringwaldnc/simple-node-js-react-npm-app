@@ -36,9 +36,6 @@ pipeline {
                     params.each { paramKey, paramValue ->
                         echo "Parameter Name: ${paramKey}, Value: ${paramValue}"
                     }
-
-                    echo 'CollectionID: ${COLLECTION_ID}'
-                    echo 'CollectionID: ${ENVIRONMENT}'
                 }
             }
         }
@@ -56,6 +53,7 @@ pipeline {
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
                     script {
                         def delay = "${params.delay}"
+                        def environment_id = "${TARGET_ENVIRONMENTS[params.environment]}"
                         sh '''
                             PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                             PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
