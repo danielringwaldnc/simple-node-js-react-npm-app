@@ -55,12 +55,14 @@ pipeline {
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
                     script {
                         def delay = "${params.delay}"
-                        def environment_id = "${ENVIRONMENT_TEST}"
+                        if (params.environment == 'DEV01') {
+                        withEnv(['environment_id=30362575-b7ef0b57-a110-4319-a89b-3ef13b236989']) {
                         sh '''
                             PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                             PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
                             npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${delay} --insecure
                         '''
+                        } }
                     }
                 }
             }
