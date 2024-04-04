@@ -4,7 +4,7 @@ pipeline {
 
         stage('Install newman') { 
             steps {
-                sh 'npm install -g newman'
+                sh 'sudo npm install -g newman'
             }
         }
 
