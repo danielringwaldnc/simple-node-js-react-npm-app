@@ -86,10 +86,7 @@ pipeline {
                     """
 
                     // Use curl to call Postman API and update the environment variable
-                    sh "curl --location --request PUT 'https://api.getpostman.com/environments/${ENVIRONMENT_TEST}' \\
-                    --header 'X-Api-Key: ${POSTMAN_API_KEY}' \\
-                    --header 'Content-Type: application/json' \\
-                    --data-raw '${payload}'"
+                    sh "curl --location --request PUT 'https://api.getpostman.com/environments/${ENVIRONMENT_TEST}' --header 'X-Api-Key: ${POSTMAN_API_KEY}' --header 'Content-Type: application/json' --data-raw '${payload}'"
                 }
             }
         }
