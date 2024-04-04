@@ -37,6 +37,8 @@ pipeline {
                         echo "Parameter Name: ${paramKey}, Value: ${paramValue}"
                     }
                 }
+
+                sh "echo $ENVIRONMENT"
             }
         }
 
