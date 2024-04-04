@@ -9,6 +9,7 @@ pipeline {
 
         stage('Install newman') { 
             steps {
+                sh 'echo test'
                 // sh 'npm install newman' 
             }
         }
