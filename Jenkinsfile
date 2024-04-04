@@ -38,7 +38,7 @@ pipeline {
                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY')]){
                     sh '''
                     PROCESSED_SECRET=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
-                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key=${PROCESSED_SECRET} --delay-request ${DELAY} --insecure
+                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_SECRET}" --delay-request ${DELAY} --insecure
                     '''
                     
                     // sh 'npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key=${JWT_PUBLIC_KEY} --delay ${DELAY}'
