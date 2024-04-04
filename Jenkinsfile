@@ -24,7 +24,7 @@ pipeline {
         DELAY = "${params.delay}"
         PUBLIC_CREDENTIAL_ID = '${TARGET_ENVIRONMENT_PREFIXES[params.environment]}' + '-jwt-pub-key'
         PRIVATE_CREDENTIAL_ID = '${TARGET_ENVIRONMENT_PREFIXES[params.environment]}' + '-jwt-priv-key'
-        ENVIRONMENT = '${TARGET_ENVIRONMENTS[params.environment]}'
+        ENVIRONMENT = "${TARGET_ENVIRONMENTS[params.environment]}"
     }
 
     stages {
