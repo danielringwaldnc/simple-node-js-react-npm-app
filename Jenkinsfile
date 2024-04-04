@@ -38,10 +38,13 @@ pipeline {
         stage('Run newman') { 
             steps {
                 withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
-                                string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY')]){
+                                string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
+                                string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')
+                                ]){
                     sh '''
-                    PROCESSED_SECRET=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
-                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${ENVIRONMENT}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_SECRET}" --delay-request ${DELAY} --insecure
+                    PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
+                    PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
+                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${ENVIRONMENT}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${DELAY} --insecure
                     '''
                     
                     // sh 'npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key=${JWT_PUBLIC_KEY} --delay ${DELAY}'
