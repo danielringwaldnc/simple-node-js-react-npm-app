@@ -77,7 +77,7 @@ pipeline {
                             "values": [
                                 {
                                     "key": "jwtKey",
-                                    "value": "${JWT_KEY}",
+                                    "value": "${JWT_PUBLIC_KEY}",
                                     "enabled": true
                                 }
                             ]
