@@ -21,7 +21,7 @@ pipeline {
 
     environment {
         COLLECTION_ID = "30362575-ccda3095-6e43-43e1-a1d1-5608b2ae8df9"
-        DELAY = "${parameters.delay}"
+        DELAY = "${params.delay}"
         PUBLIC_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-pub-key'
         PRIVATE_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-priv-key'
         ENVIRONMENT = "${TARGET_ENVIRONMENTS[params.environment]}"
