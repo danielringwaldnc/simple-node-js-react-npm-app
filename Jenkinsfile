@@ -21,7 +21,7 @@ pipeline {
 
     environment {
         COLLECTION_ID = "30362575-ccda3095-6e43-43e1-a1d1-5608b2ae8df9"
-        DELAY = '${params.delay}'
+        DELAY = "${params.delay}"
         PUBLIC_CREDENTIAL_ID = '${TARGET_ENVIRONMENT_PREFIXES[params.environment]}' + '-jwt-pub-key'
         PRIVATE_CREDENTIAL_ID = '${TARGET_ENVIRONMENT_PREFIXES[params.environment]}' + '-jwt-priv-key'
         ENVIRONMENT = '${TARGET_ENVIRONMENTS[params.environment]}'
@@ -40,10 +40,12 @@ pipeline {
                 withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
-                    script {sh '''
+                    script {
+
+                    sh '''
                         PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                         PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
-                        npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${ENVIRONMENT}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${DELAY} --insecure
+                        npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${env.ENVIRONMENT}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${env.DELAY} --insecure
                     '''
                     }
                 }
