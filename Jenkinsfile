@@ -54,6 +54,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
+                    sh "echo ${ENVIRONMENT}"
                     sh '''
                         echo $COLLECTION_ID
                         echo $ENVIRONMENT
