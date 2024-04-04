@@ -1,5 +1,5 @@
 final Map TARGET_ENVIRONMENTS = [
-    'DEV01': '30362575-b7ef0b57-a110-4319-a89b-3ef13b236989',
+    'DEV01': '28909170-5bf26702-6d8d-426b-b873-007f1afb6d1e',
     'TEST01': '30362575-1c2494f7-3ff2-4c70-8658-9d299886c616',
     'QA01': '30362575-fa29cab4-c41f-4c1e-9e4c-2845c18ef95c',
     'PREPROD01': '30362575-450f5e44-bba1-4fd3-8dbe-f7f7d9e59718'
@@ -50,44 +50,23 @@ pipeline {
 
         stage('Run newman') { 
             steps {
-                /*withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
+                script {
+                    
+                withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
-                    script {
                         def delay = "${params.delay}"
                         if (params.environment == 'DEV01') {
-                        withEnv(['environment_id=30362575-b7ef0b57-a110-4319-a89b-3ef13b236989']) {
-                        sh '''
-                            PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
-                            PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
-                            npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${delay} --insecure
-                        '''
-                        } }
-                    }
-                }
-                */
-                script {
-                // Retrieve JWT key from Jenkins credentials
-                withCredentials([string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
-                                string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY')]) {
-                    // Prepare the payload for updating the Postman environment
-                    def payload = """
-                    {
-                        "environment": {
-                            "values": [
-                                {
-                                    "key": "jwtKey",
-                                    "value": "${JWT_PUBLIC_KEY}",
-                                    "enabled": true
-                                }
-                            ]
+                        withEnv(["environment_id=${TARGET_ENVIRONMENTS[params.environment]}"]) {
+                                sh '''
+                                    PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
+                                    PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
+                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${delay} --insecure
+                                '''
+                            } 
                         }
                     }
-                    """
-
-                    // Use curl to call Postman API and update the environment variable
-                    sh "curl --location --request PUT 'https://api.getpostman.com/environments/${ENVIRONMENT_TEST}' --header 'X-Api-Key: ${POSTMAN_API_KEY}' --header 'Content-Type: application/json' --data-raw '${payload}'"
-                } }
+                }
             }
         }
     }
