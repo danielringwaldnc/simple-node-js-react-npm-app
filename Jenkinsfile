@@ -23,7 +23,6 @@ pipeline {
 
     environment {
         COLLECTION_ID = "30362575-ccda3095-6e43-43e1-a1d1-5608b2ae8df9"
-        DELAY = "${params.delay}"
         HTML_RESULT_PATH = "${HTML_TEST_RESULT_PATH}"
         PUBLIC_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-pub-key'
         PRIVATE_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-priv-key'
@@ -48,9 +47,9 @@ pipeline {
                                  string(credentialsId: env.PRIVATE_CREDENTIAL_ID, variable: 'JWT_PRIVATE_KEY')]) {
                         
                         def delay = "${params.delay}"
-                        def html_result_path = "${env.HTML_RESULT_PATH}"
                         
-                        withEnv(["environment_id=${TARGET_ENVIRONMENTS[params.environment]}"]) {
+                        withEnv(["environment_id=${TARGET_ENVIRONMENTS[params.environment]}",
+                                "html_result_path=${env.HTML_RESULT_PATH}"]) {
                                 sh '''
                                     PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                                     PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
