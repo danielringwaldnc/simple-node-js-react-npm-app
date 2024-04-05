@@ -56,7 +56,7 @@ pipeline {
                                 //     npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --reporter-htmlextra-export ${html_result_path} --delay-request ${delay} --insecure
                                 // '''
                                 sh """
-                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${JWT_PUBLIC_KEY}" --env-var jwt_priv_key="${JWT_PRIVATE_KEY}" --reporter-htmlextra-export ${html_result_path} --delay-request ${delay} --insecure
+                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="'${JWT_PUBLIC_KEY}'" --env-var jwt_priv_key="'${JWT_PRIVATE_KEY}'" --reporter-htmlextra-export ${html_result_path} --delay-request ${delay} --insecure
                                 """
                         }
                     }
