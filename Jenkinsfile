@@ -47,12 +47,13 @@ pipeline {
                                  string(credentialsId: env.PRIVATE_CREDENTIAL_ID, variable: 'JWT_PRIVATE_KEY')]) {
                         
                         def delay = "${params.delay}"
+                        def html_result_path = "${HTML_TEST_RESULTS_PATH}"
                         
                         withEnv(["environment_id=${TARGET_ENVIRONMENTS[params.environment]}"]) {
                                 sh '''
                                     PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                                     PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
-                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --reporter-htmlextra-export ${HTML_TEST_RESULTS_PATH} --delay-request ${delay} --insecure
+                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --reporter-htmlextra-export ${html_result_path} --delay-request ${delay} --insecure
                                 '''
                         }
                     }
