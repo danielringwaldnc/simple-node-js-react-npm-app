@@ -49,7 +49,7 @@ pipeline {
                         def delay = "${params.delay}"
                         
                         withEnv(["environment_id=${TARGET_ENVIRONMENTS[params.environment]}",
-                                "html_result_path=${env.HTML_RESULT_PATH}"]) {
+                                "html_result_path=${HTML_TEST_RESULTS_PATH}"]) {
                                 sh '''
                                     PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                                     PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
