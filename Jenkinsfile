@@ -28,20 +28,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Print Parameters') {
-            steps {
-                script {
-                    // Iterating over each parameter
-                    params.each { paramKey, paramValue ->
-                        echo "Parameter Name: ${paramKey}, Value: ${paramValue}"
-                    }
-                }
-
-                sh "echo $ENVIRONMENT"
-            }
-        }
-
         stage('Install newman') { 
             steps {
                 sh 'npm install newman'
@@ -53,18 +39,20 @@ pipeline {
                 script {
                     
                 withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
-                                string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
-                                string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
+                                 string(credentialsId: 'jwt-pub-key', variable: 'JWT_PUBLIC_KEY'),
+                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
+                        
                         def delay = "${params.delay}"
-                        //if (params.environment == 'DEV01') {
+                        
                         withEnv(["environment_id=${TARGET_ENVIRONMENTS[params.environment]}"]) {
                                 sh '''
                                     PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                                     PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
+                                    set +x
                                     npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${delay} --insecure
+                                    set -x
                                 '''
-                            } 
-                        //}
+                        }
                     }
                 }
             }
