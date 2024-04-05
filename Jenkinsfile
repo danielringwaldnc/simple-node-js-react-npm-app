@@ -5,7 +5,7 @@ final Map TARGET_ENVIRONMENTS = [
     'PREPROD01': '30362575-450f5e44-bba1-4fd3-8dbe-f7f7d9e59718'
 ]
 final Map TARGET_ENVIRONMENT_PREFIXES = [
-    'DEV01': '',
+    'DEV01': 'dev',
     'QA01': 'qa',
     'TEST01': 'test',
     'PREPROD01': 'preprod'
@@ -22,7 +22,7 @@ pipeline {
     environment {
         COLLECTION_ID = "30362575-ccda3095-6e43-43e1-a1d1-5608b2ae8df9"
         DELAY = "${params.delay}"
-        PUBLIC_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + 'jwt-pub-key'
+        PUBLIC_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-pub-key'
         PRIVATE_CREDENTIAL_ID = "${TARGET_ENVIRONMENT_PREFIXES[params.environment]}" + '-jwt-priv-key'
         ENVIRONMENT_TEST = "${TARGET_ENVIRONMENTS[params.environment]}"
     }
@@ -40,7 +40,7 @@ pipeline {
                     
                 withCredentials([string(credentialsId: 'postman-api-key', variable: 'POSTMAN_API_KEY'),
                                  string(credentialsId: env.PUBLIC_CREDENTIAL_ID, variable: 'JWT_PUBLIC_KEY'),
-                                 string(credentialsId: 'jwt-priv-key', variable: 'JWT_PRIVATE_KEY')]) {
+                                 string(credentialsId: env.PRIVATE_CREDENTIAL_ID, variable: 'JWT_PRIVATE_KEY')]) {
                         
                         def delay = "${params.delay}"
                         
