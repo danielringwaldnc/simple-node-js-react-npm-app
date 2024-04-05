@@ -1,3 +1,5 @@
+final String HTML_TEST_RESULTS_PATH = '${WORKSPACE}/build/result/test-results.html'
+
 final Map TARGET_ENVIRONMENTS = [
     'DEV01': '28909170-5bf26702-6d8d-426b-b873-007f1afb6d1e',
     'TEST01': '30362575-1c2494f7-3ff2-4c70-8658-9d299886c616',
@@ -31,6 +33,8 @@ pipeline {
         stage('Install newman') { 
             steps {
                 sh 'npm install newman'
+                sh 'npm install newman-reporter-htmlextra'
+                sh 'echo $WORKSPACE'
             }
         }
 
@@ -48,9 +52,7 @@ pipeline {
                                 sh '''
                                     PROCESSED_PUBLIC=$(echo "$JWT_PUBLIC_KEY" | tr -d '\n')
                                     PROCESSED_PRIVATE=$(echo "$JWT_PRIVATE_KEY" | tr -d '\n')
-                                    set +x
-                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --delay-request ${delay} --insecure
-                                    set -x
+                                    npx newman run https://api.getpostman.com/collections/${COLLECTION_ID}?apikey=${POSTMAN_API_KEY} --environment https://api.getpostman.com/environments/${environment_id}?apikey=${POSTMAN_API_KEY} --env-var jwt_pub_key="${PROCESSED_PUBLIC}" --env-var jwt_priv_key="${PROCESSED_PRIVATE}" --reporter-htmlextra-export ${HTML_TEST_RESULTS_PATH} --delay-request ${delay} --insecure
                                 '''
                         }
                     }
